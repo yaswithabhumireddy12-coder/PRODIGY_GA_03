@@ -1,0 +1,35 @@
+# Step 1: Import libraries
+import random
+
+# Step 2: Build Markov Chain model
+def build_markov_chain(text, n=1):
+    words = text.split()
+    chain = {}
+    for i in range(len(words)-n):
+        key = tuple(words[i:i+n])
+        next_word = words[i+n]
+        chain.setdefault(key, []).append(next_word)
+    return chain
+
+# Step 3: Generate text from the chain
+def generate_text(chain, length=20, n=1):
+    key = random.choice(list(chain.keys()))
+    output = list(key)
+    for _ in range(length):
+        next_words = chain.get(key)
+        if not next_words:
+            break
+        next_word = random.choice(next_words)
+        output.append(next_word)
+        key = tuple(output[-n:])
+    return " ".join(output)
+
+# Step 4: User input for training text
+training_text = input("Enter training text: ")
+
+# Step 5: Build chain and generate output
+chain = build_markov_chain(training_text, n=1)
+generated = generate_text(chain, length=30)
+
+print("\nGenerated Text:\n")
+print(generated)
